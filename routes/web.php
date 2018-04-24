@@ -11,13 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//pages
+Route::get('/', 'PagesController@index')->name('home');
 
-// Route::get('/hello', ['middleware' => ['role:superadministrator'], 'uses' => 'PagesController@hello']
-// );
-
+//Authentication 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//admin access 
+Route::prefix('manage')->middleware('role:superadministrator|administrator|editor')->group(function () {
+Route::resource('posts', 'PostController');
+});
+
+// user access
+Route::get('/home', 'HomeController@index')->name('dashboard');
+
+
+
